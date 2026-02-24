@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Priceless Capture · 四十有三</title>
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <!-- fonts: elegant, minimalist, with asian-inspired calligraphy feel -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..500&family=Zen+Kaku+Gothic+New:wght@300;400;500&family=Zen+Maru+Gothic:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #faf7f2;  /* warm rice paper */
+      font-family: 'Zen Kaku Gothic New', 'Inter', sans-serif;
+      color: #3a3a3a;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    .smooth-wrapper {
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .gallery-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem 1rem;
+    }
+
+    /* ===== HEADER – inspired by image's quiet strength ===== */
+    .brand-header {
+      text-align: center;
+      margin-bottom: 4rem;
+      position: relative;
+      padding-top: 2rem;
+    }
+
+    /* subtle brush stroke line – longer, more presence */
+    .brand-header::after {
+      content: '';
+      position: absolute;
+      bottom: -1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #b09b8d, #b09b8d, transparent);
+    }
+
+    .company-name {
+      font-size: 0.8rem;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: #a49a93;
+      margin-bottom: 1.5rem;
+      font-weight: 300;
+    }
+
+    .company-name i {
+      margin: 0 0.4rem;
+      color: #b9aba2;
+      font-size: 0.6rem;
+    }
+
+    h1 {
+      font-family: 'Zen Maru Gothic', 'Zen Kaku Gothic New', sans-serif;
+      font-size: clamp(2.8rem, 10vw, 5rem);
+      font-weight: 300;
+      color: #3e362e;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    .h1-sub {
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 1rem;
+      font-weight: 300;
+      color: #8e8076;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      display: block;
+      margin-top: 0.8rem;
+    }
+
+    /* zen tagline with dots */
+    .tagline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      color: #aa9a8e;
+      font-size: 0.9rem;
+      margin-top: 2.2rem;
+      font-weight: 300;
+    }
+
+    .tagline .dot {
+      color: #c8b9af;
+      font-size: 0.4rem;
+    }
+
+    /* ===== GRID – clean, spacious, with gentle borders ===== */
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem 1.8rem;
+      margin: 4rem 0 5rem;
+    }
+
+    /* CARD – minimalist, with soft borders and quiet elegance */
+    .gallery-card {
+      position: relative;
+      background: transparent;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+      padding: 0.5rem 0.5rem 1rem 0.5rem;
+      border: 1px solid transparent;
+      border-radius: 0;
+    }
+
+    .gallery-card:hover {
+      border-color: #e2d8d0;
+      transform: translateY(-2px);
+    }
+
+    .card-image {
+      position: relative;
+      aspect-ratio: 3 / 4;
+      background: #f0e9e2;
+      overflow: hidden;
+      margin-bottom: 0.8rem;
+      border: 1px solid #eee5dd;
+    }
+
+    .card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease, filter 0.4s ease;
+      filter: grayscale(20%) contrast(1.02);
+    }
+
+    .gallery-card:hover .card-image img {
+      transform: scale(1.02);
+      filter: grayscale(0%) contrast(1.05);
+    }
+
+    /* minimal card footer – just a quiet number and a dot */
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0.2rem;
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-weight: 300;
+      color: #9c9088;
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+    }
+
+    .card-number {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-number .dot {
+      color: #d0c0b6;
+      font-size: 0.3rem;
+    }
+
+    .card-icon {
+      color: #cfc1b8;
+      font-size: 0.7rem;
+      transition: color 0.2s;
+    }
+
+    .gallery-card:hover .card-icon {
+      color: #9a857a;
+    }
+
+    /* ===== LIGHTBOX – clean, serene, with a meditative feel ===== */
+    .lightbox-modal {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(245, 238, 230, 0.98);
+      backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      padding: 2rem;
+    }
+
+    .lightbox-modal.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .lightbox-panel {
+      max-width: 900px;
+      width: 100%;
+      background: white;
+      padding: 1.5rem;
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.05);
+      border: 1px solid #f0e6df;
+      transform: scale(0.96);
+      transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+    }
+
+    .lightbox-modal.active .lightbox-panel {
+      transform: scale(1);
+    }
+
+    .lightbox-image-container {
+      background: #f5f0eb;
+      max-height: 70vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid #ece1d9;
+      transition: background 0.2s;
+    }
+
+    .lightbox-image-container img {
+      width: 100%;
+      height: auto;
+      max-height: 70vh;
+      object-fit: contain;
+      display: block;
+    }
+
+    .lightbox-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1.2rem;
+    }
+
+    .lightbox-controls {
+      display: flex;
+      gap: 0.8rem;
+    }
+
+    .ctrl-btn {
+      background: none;
+      border: none;
+      width: 44px;
+      height: 44px;
+      font-size: 1.2rem;
+      color: #8f8179;
+      cursor: pointer;
+      border: 1px solid #e5d9d1;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f9f5f1;
+    }
+
+    .ctrl-btn:hover {
+      background: #dacfc7;
+      color: #4a3f39;
+      border-color: #dacfc7;
+    }
+
+    /* ===== FOOTER – quiet, with poetic touch ===== */
+    .footer-note {
+      text-align: center;
+      margin-top: 4rem;
+      color: #b4a69c;
+      font-size: 0.85rem;
+      border-top: 1px solid #e8dfd8;
+      padding-top: 2rem;
+      font-weight: 300;
+      letter-spacing: 1px;
+    }
+
+    .footer-note i {
+      margin: 0 0.6rem;
+      color: #cfc2b9;
+      font-size: 0.7rem;
+    }
+
+    /* ===== POETIC ELEMENTS – directly inspired by the serene image ===== */
+    .poetry-line {
+      text-align: center;
+      font-family: 'Zen Maru Gothic', sans-serif;
+      font-weight: 300;
+      color: #9f9289;
+      font-size: 0.9rem;
+      margin: 2rem 0 -1rem;
+      letter-spacing: 0.5px;
+      line-height: 1.8;
+      opacity: 0.7;
+    }
+
+    .poetry-line span {
+      display: inline-block;
+      margin: 0 0.5rem;
+    }
+
+    .poetry-line .jp {
+      font-size: 1rem;
+      color: #b7a69b;
+    }
+
+    /* subtle hint of the moon and shadow */
+    .moon-hint {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      opacity: 0.2;
+      font-size: 2rem;
+      pointer-events: none;
+      color: #d9c7bb;
+      transform: rotate(5deg);
+    }
+  </style>
+</head>
+<body>
+<!-- a tiny poetic hint floating – like a half moon -->
+<div class="moon-hint">☾</div>
+
+<div class="smooth-wrapper">
+  <div class="gallery-container">
+    <!-- header with quiet elegance and the image's feeling -->
+    <div class="brand-header">
+      <div class="company-name">
+        <i class="fas fa-circle"></i> PRICELESS CAPTURE <i class="fas fa-circle"></i>
+      </div>
+      <h1>
+       幽玄 (Yūgen)
+        <span class="h1-sub">frames · collection</span>
+      </h1>
+      
+      <!-- poetic line inspired by the image – deeper, with yūgen -->
+      <div class="poetry-line">
+        <span class="jp">安</span> <span>·</span> <span class="jp">如意</span> <span>·</span> <span class="jp">自在</span>
+        <br>
+        <span>月映れども　影は淡く</span> <span style="font-size:0.7rem; opacity:0.6;">(the moon reflects, shadows soft)</span>
+        <br>
+        <span class="jp">光</span> <span>·</span> <span class="jp">静けさ</span> <span>·</span> <span class="jp">永遠の一瞬</span>
+      </div>
+      
+      <div class="tagline">
+        <span>silence</span>
+        <span class="dot"><i class="fas fa-circle"></i></span>
+        <span>light</span>
+        <span class="dot"><i class="fas fa-circle"></i></span>
+        <span>essence</span>
+      </div>
+    </div>
+
+    <!-- image grid – will be populated -->
+    <div class="image-grid" id="dynamicGrid"></div>
+
+    <!-- footer with quiet words, echoing the image's calligraphy -->
+    <div class="footer-note">
+      <i class="fas fa-circle"></i>  塵世中・自在行  —  walking freely in the world  <i class="fas fa-circle"></i>
+    </div>
+  </div>
+</div>
+
+<!-- lightbox -->
+<div class="lightbox-modal" id="lightboxModal">
+  <div class="lightbox-panel">
+    <div class="lightbox-image-container">
+      <img src="" alt="" id="lightboxImage">
+    </div>
+    <div class="lightbox-footer">
+      <div class="lightbox-controls">
+        <button class="ctrl-btn" id="prevBtn" aria-label="previous"><i class="fas fa-chevron-left"></i></button>
+        <button class="ctrl-btn" id="nextBtn" aria-label="next"><i class="fas fa-chevron-right"></i></button>
+        <button class="ctrl-btn" id="closeBtn" aria-label="close"><i class="fas fa-times"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // CONFIGURATION – 43 images in OUTPUT folder (1.jpg … 43.jpg)
+    const TOTAL = 43;
+    const FOLDER = 'OUTPUT';
+
+    const images = [];
+    for (let i = 1; i <= TOTAL; i++) {
+      images.push({ id: i, path: `${FOLDER}/${i}.jpg` });
+    }
+
+    // ----- render grid (minimal, poetic) -----
+    const grid = document.getElementById('dynamicGrid');
+    function renderGrid() {
+      let html = '';
+      images.forEach(img => {
+        html += `
+          <div class="gallery-card" data-id="${img.id}">
+            <div class="card-image">
+              <img src="${img.path}" alt="frame ${img.id}" loading="lazy" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'400\' viewBox=\'0 0 300 400\'%3E%3Crect width=\'300\' height=\'400\' fill=\'%23ece1d9\'/%3E%3Ctext x=\'80\' y=\'200\' font-family=\'Zen Kaku Gothic New\' font-size=\'24\' fill=\'%23948278\'%3E📸 ${img.id}%3C/text%3E%3C/svg%3E';">
+            </div>
+            <div class="card-footer">
+              <div class="card-number">
+                <span class="dot"><i class="fas fa-circle"></i></span>
+                <span>${img.id.toString().padStart(2, '0')}</span>
+              </div>
+              <span class="card-icon"><i class="fas fa-arrow-right"></i></span>
+            </div>
+          </div>
+        `;
+      });
+      grid.innerHTML = html;
+
+      // attach click for lightbox
+      document.querySelectorAll('.gallery-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const id = parseInt(card.dataset.id, 10);
+          openLightbox(id);
+        });
+      });
+    }
+
+    // ----- lightbox -----
+    const lightbox = document.getElementById('lightboxModal');
+    const lightboxImg = document.getElementById('lightboxImage');
+    const closeBtn = document.getElementById('closeBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let currentId = 1;
+
+    function openLightbox(id) {
+      currentId = id;
+      const img = images.find(i => i.id === id);
+      if (img) lightboxImg.src = img.path;
+      lightbox.classList.add('active');
+    }
+
+    function closeLightbox() { lightbox.classList.remove('active'); }
+    function showPrev() {
+      let newId = currentId - 1;
+      if (newId < 1) newId = TOTAL;
+      currentId = newId;
+      lightboxImg.src = images.find(i => i.id === newId).path;
+    }
+    function showNext() {
+      let newId = currentId + 1;
+      if (newId > TOTAL) newId = 1;
+      currentId = newId;
+      lightboxImg.src = images.find(i => i.id === newId).path;
+    }
+
+    closeBtn.addEventListener('click', closeLightbox);
+    prevBtn.addEventListener('click', showPrev);
+    nextBtn.addEventListener('click', showNext);
+    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') showPrev();
+      if (e.key === 'ArrowRight') showNext();
+    });
+
+    // ===== GSAP ANIMATIONS – quiet, smooth, inspired by the image's flow =====
+    function initGSAP() {
+      gsap.registerPlugin(ScrollTrigger);
+
+      // reveal cards with gentle stagger – like emerging from mist
+      gsap.set('.gallery-card', { opacity: 0, y: 20 });
+      
+      gsap.utils.toArray('.gallery-card').forEach((card, i) => {
+        gsap.to(card, {
+          scrollTrigger: {
+            trigger: card,
+            start: 'top 90%',
+            toggleActions: 'play none none reverse',
+          },
+          duration: 1.2,
+          opacity: 1,
+          y: 0,
+          ease: 'power2.out',
+          delay: i * 0.02, // subtle delay, not too staggered
+        });
+      });
+
+      // subtle parallax on cards – like floating
+      gsap.utils.toArray('.gallery-card').forEach((card) => {
+        gsap.to(card, {
+          y: 8,
+          scrollTrigger: {
+            trigger: card,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 0.3,
+          }
+        });
+      });
+
+      // soft fade for header poetry
+      gsap.from('.poetry-line', {
+        scrollTrigger: {
+          trigger: '.poetry-line',
+          start: 'top 70%',
+          toggleActions: 'play none none reverse',
+        },
+        opacity: 0,
+        y: 10,
+        duration: 1.5,
+        ease: 'power1.out'
+      });
+
+      ScrollTrigger.refresh();
+    }
+
+    renderGrid();
+    setTimeout(initGSAP, 200);
+    window.addEventListener('load', () => ScrollTrigger.refresh());
+  })();
+</script>
+</body>
+</html>
